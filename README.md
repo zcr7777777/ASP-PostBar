@@ -27,3 +27,18 @@ CREATE TABLE `blackboard` (
   `likec` tinyint NOT NULL,
   `commentc` tinyint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=gb18030
+<br><br><hr>
+文件储存（files）表DDL<br>
+CREATE TABLE `files` (
+  `filecontent` longblob NOT NULL,
+  `fileid` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=gbk
+<br><br><hr>
+文件登记表（filetree）DDL<br>
+CREATE TABLE `filetree` (
+  `fileid` int NOT NULL,
+  `filename` longblob NOT NULL,
+  `totalbytes` int NOT NULL,
+  `uid` tinytext CHARACTER SET gbk COLLATE gbk_chinese_ci,
+  `private` tinyint DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=gbk
