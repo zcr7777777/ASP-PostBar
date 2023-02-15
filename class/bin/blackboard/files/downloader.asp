@@ -10,7 +10,7 @@ response.cookies("downloadid")=""
 end if
 if fileid="" then
 response.write("<form method='POST' action='./downloader.asp'>请点击文件名下载或输入文件id:<input type='text' name='id'><input type='submit' name='send' value='查询'>")
-response.write("<hr>公开下载的文件：<br><table border=1><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
+response.write("<hr>公开下载的文件：<br><table border=1 cellspacing=0><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
 set conna=server.createobject("adodb.connection")
 conna.open "signclass"
 set rsa=server.createobject("adodb.recordset")
@@ -40,7 +40,7 @@ response.write("</tbody></table><hr>本账户下私有的文件：")
 if request.cookies("uid")="" then
 response.write("<br><a href='../login.asp'>登录</a>查看文件列表")
 else
-response.write("<br><table border=1><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
+response.write("<br><table border=1 cellspacing=0><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
 rsa.movefirst
 for j=1 to rsa.recordcount
 if cint(rsa(4))=1 and rsa(3)=request.cookies("uid") then
@@ -57,8 +57,8 @@ if rsa(2)<1024 then
     end if
   end if
 response.write("</th></tr>")
-rsa.movenext
 end if
+rsa.movenext
 next
 response.write("</tbody></table>")
 end if
@@ -86,6 +86,9 @@ response.write("<br>此文件大小：")
       response.write(round(ttb/1048576,2)&"MB")
     end if
   end if
+if rs(3)<>"" and rs(3)<>request.cookies("uid") then
+response.write("<br>上传此文件的用户是："&rs(3))
+end if
 response.write("<br><a href='./downloader.asp'>返回下载其他文件</a>")
 end if
 end if
