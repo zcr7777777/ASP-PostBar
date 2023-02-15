@@ -59,7 +59,7 @@ hide=0
 else
 requid=Request.QueryString("requid")
 if requid="" then
-response.write("<x><b><h3>注册/登录</h3></b></x><form method= 'post ' accept-charset= 'utf-8 ' action='login.asp?jumpto="&jumpto&"'><x>用户名：</x><input type= 'text ' name= 'requid'><br><button class= 'btn ' style= 'vertical-align:middle'><span>继续</span></button></form>")
+response.write("<x><b><h3>注册/登录</h3></b></x><form method= 'post ' accept-charset= 'utf-8 ' action='login.asp?jumpto="&jumpto&"'><x>用户名：</x><input type= 'text ' name= 'requid'><br><button class= 'btn ' style= 'vertical-align:middle'><span>继续</span></button></form><br><a href='./files/downloader.asp' target='_blank' style='color: white; padding: 8px 16px; text-decoration: none; background-color: blue; border-radius: 4px;'><b>直接下载共享文件</b></a>")
 else
 Response.Cookies("requid") = requid
 set rs=server.createobject("adodb.recordset")
