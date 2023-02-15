@@ -16,10 +16,19 @@ if tpwd=reqpwd then
 response.cookies("requid")=""
 response.cookies("uid")=requid
 response.cookies("pwd")=reqpwd
+jumpto=request("jumpto")
 if registed=1 then
 response.redirect("./?from=loginbyreg")
 else
+if jumpto="private" then
+response.redirect("./files/privatization.asp")
+else
+if jumpto="download" then
+response.redirect("./files/downloader.asp?id="&request("downloadid"))
+else
 response.redirect("./?from=login")
+end if
+end if
 end if
 else
 response.redirect("./login.asp?requid="&requid&"&from=errpwd")
