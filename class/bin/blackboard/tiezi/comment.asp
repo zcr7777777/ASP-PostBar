@@ -1,14 +1,20 @@
 <%Response.Charset="utf-8"%>
 <%
-cklike=2
-uuid=Request.Cookies("uid")
-likep=Request("like")
-if likep=0 then
-Response.Write("开发中...")
+if request("from")="empty" then
+response.write("<script>alert('不得为空')</script>")
 end if
-if likep=1 then
+uuid=Request.Cookies("uid")
+if uuid="" then
+response.redirect("../login.asp?from=index")
+end if
+cklike=2
 tid=Request("tid")
 tim=Request("tim")
+likep=Request("like")
+if likep=0 then
+Response.write("<head><title>发表评论</title><link rel='stylesheet' type='text/css' href='/bin/css/istyle.css'></head><form action='./commentservice.asp?ttid="&tim&tid&"' method='post' accept-charset='ISO-8859-1'><x>请输入评论：</x><label for='text'></label><br><textarea id='text' name='text' style='width: 399px; height: 100px; border: 3px solid green; border-radius: 3px;'></textarea><br><x style='color: grey;'>附加到：</x><input type='text' name='ttid' value='"&tim&tid&"' disabled=true style='width:125px;border: 2px solid grey;'><br><button class='btn' style='vertical-align:middle'><span>提交</span></button></form>")
+end if
+if likep=1 then
 set rs=Server.CreateObject("Adodb.Recordset")
 Set conn=Server.CreateObject("Adodb.Connection")
 conn.Open "signclass"
