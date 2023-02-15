@@ -1,6 +1,9 @@
 <% 
 response.charset="utf-8"
 uid = Request.Cookies("username")
+if request("from")="" then
+response.redirect("./bin/blackboard/")
+end if
 if uid="" then
 response.redirect("./bin/login.asp")
 end if
