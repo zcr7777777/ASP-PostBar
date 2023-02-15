@@ -1,5 +1,6 @@
 # ASP-PostBar
-简单留言板和选课，仅供参考<br>
+开发中的留言板和选课，仅供参考<br>
+文件名和变量名都是瞎起的，部分逻辑混乱，见谅<br>
 signclass是一个
 ODBC连接，使用MySQL数据库<br><br>
 <hr>
