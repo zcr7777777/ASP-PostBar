@@ -16,7 +16,7 @@ else
 Response.Cookies("class") = sclass
 Response.Cookies("grade") = sgrade
 Response.Cookies("username") = sname
-response.redirect("/")
+response.redirect("/?from=index")
 end if
 %>
 </body>
