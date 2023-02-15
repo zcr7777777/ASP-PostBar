@@ -1,6 +1,7 @@
 # ASP-PostBar
 开发中的留言板和选课，仅供参考<br>
-文件名和变量名都是瞎起的，部分逻辑混乱，见谅<br>
+用记事本纯手搓的，VBScript
+文件名和变量名都是瞎起的，逻辑混乱，见谅<br>
 signclass是一个
 ODBC连接，使用MySQL数据库<br><br>
 <hr>
