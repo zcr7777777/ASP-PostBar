@@ -18,5 +18,5 @@ conn.close
 set conn=nothing
 response.write("<body><x>提交成功</x><br>")
 end if
-response.write("<li style='list-style-type: none;width: 70px;'><a href='../index.asp'>返回</a></li></body>")
+response.write("<li style='list-style-type: none;width: 70px;'><a href='../index.asp?from=index'>返回</a></li></body>")
 %>
