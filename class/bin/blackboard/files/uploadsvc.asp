@@ -1,54 +1,95 @@
 <%
 response.charset="utf-8"
 %>
-<head><title>上传文件</title><link rel="stylesheet" type="text/css" href="/bin/css/istyle.css"></head><iframe src="/bin/iframe/bottom.html" scrolling="no" frameborder="0" class="ifr"></iframe>
+<head><title>下载文件</title><link rel="stylesheet" type="text/css" href="/bin/css/istyle.css"></head><iframe src="/bin/iframe/bottom.html" scrolling="no" frameborder="0" class="ifr"></iframe>
 <%
-ttb=request.totalbytes
-if ttb<300 then
-response.redirect("./upload.asp")
+fileid=request("id")
+if request.cookies("jumpto")="download" then
+response.cookies("jumpto")=""
+response.cookies("downloadid")=""
+end if
+if fileid="" then
+response.write("<form method='POST' action='./downloader.asp'>请点击文件名下载或输入文件id:<input type='text' name='id'><input type='submit' name='send' value='查询'>")
+response.write("<hr>公开下载的文件：<br><table border=1 cellspacing=0><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
+set conna=server.createobject("adodb.connection")
+conna.open "signclass"
+set rsa=server.createobject("adodb.recordset")
+rsa.CursorLocation=3
+sql="select * from filetree"
+rsa.open sql,conna,1,3
+rsa.movefirst
+for j=1 to rsa.recordcount
+if cint(rsa(4))=0 then
+response.write("<tr><th><a href='./downloader.asp?id="&rsa(0)&"'>"&chrb(34))
+response.binarywrite(rsa(1))
+response.write("</a></th><th>"&rsa(0)&"</th><th>")
+if rsa(2)<1024 then
+  response.write(rsa(2)&"B")
+  else
+    if rsa(2)<1048576 then
+    response.write(round(rsa(2)/1024,2)&"KB")
+    else
+      response.write(round(rsa(2)/1048576,2)&"MB")
+    end if
+  end if
+response.write("</th></tr>")
+end if
+rsa.movenext
+next
+response.write("</tbody></table><hr>本账户下私有的文件：")
+if request.cookies("uid")="" then
+response.write("<br><a href='../login.asp'>登录</a>查看文件列表")
 else
-response.buffer=true
-response.write("上传完成，请不要离开此页面，服务器正在处理中...<br>")
-response.flush
-aFData=request.binaryread(ttb-1)
-divider=leftB(aFData,clng(instrb(aFData,chrB(13)&chrB(10)))-1)
-datastart=instrb(aFData,chrB(13)&chrB(10) & chrB(13)&chrB(10))+4 
-dataend=instrb(datastart+1,aFData,divider)-datastart
-rdata=midb(aFData,datastart,dataend)
-nleft=instrb(aFData,chrb(108)&chrb(101)&chrb(110)&chrb(97))+8
-nright=instrb(aFData,chrb(84)&chrb(121)&chrb(112)&chrb(101))-nleft-10.5
-filename=midb(aFData,nleft,nright)
+response.write("<br><table border=1 cellspacing=0><thead><tr><th>文件名称</th><th>id</th><th>文件大小</th></tr></thead><tbody>")
+rsa.movefirst
+for j=1 to rsa.recordcount
+if cint(rsa(4))=1 and rsa(3)=request.cookies("uid") then
+response.write("<tr><th><a href='./downloader.asp?id="&rsa(0)&"'>"&chrb(34))
+response.binarywrite(rsa(1))
+response.write("</a></th><th>"&rsa(0)&"</th><th>")
+if rsa(2)<1024 then
+  response.write(rsa(2)&"B")
+  else
+    if rsa(2)<1048576 then
+    response.write(round(rsa(2)/1024,2)&"KB")
+    else
+      response.write(round(rsa(2)/1048576,2)&"MB")
+    end if
+  end if
+response.write("</th></tr>")
+end if
+rsa.movenext
+next
+response.write("</tbody></table>")
+end if
+else
 set conn=server.createobject("adodb.connection")
 conn.open "signclass"
-set rsa=server.createobject("adodb.recordset")
-sql="select * from filetree"
-rsa.open sql,conn,1,3
-if rsa.eof or rsa.bof then
-fileid=1
-else
-rsa.movelast
-fileid=rsa(0)+1
-end if
-rsa.addnew
-rsa("fileid")=fileid
-rsa("filename").appendchunk filename
-rsa("totalbytes")=ttb
-rsa("private")=0
-rsa.update
-rsa.close
-set rsa=nothing
 set rs=server.createobject("adodb.recordset")
-rs.open "select * from files",conn,1,3
-rs.addnew
-rs("filecontent").appendchunk rdata
-rs("fileid")=fileid
-rs.update
-rs.close
-set rs=nothing
-conn.close
-set conn=nothing
-response.clear
-response.write("上传成功，文件id为："&fileid)
-response.write("<br>请选择是否私有此文件：<form method='POST' action='./privatization.asp?setid="&fileid&"'><select name='private'><option value='false'>保持公开</option><option value='true'>私有</option></select><input type='submit' name='send' value='确定'>")
+sql="select * from filetree where fileid="&fileid
+rs.open sql,conn,1,3
+if rs.eof or rs.bof then
+response.write("文件不存在！<br><a href='./downloader.asp'>返回</a>")
+else
+response.write("<a href='./download.asp?filename=")
+response.binarywrite(rs(1))
+response.write("&fileid="&fileid&"'>点击下载</a><br>此文件名称："&chrb(34))
+response.binarywrite(rs(1))
+ttb=rs(2).value
+response.write("<br>此文件大小：")
+  if ttb<1024 then
+  response.write(ttb&"B")
+  else
+    if ttb<1048576 then
+    response.write(round(ttb/1024,2)&"KB")
+    else
+      response.write(round(ttb/1048576,2)&"MB")
+    end if
+  end if
+if rs(3)<>"" and rs(3)<>request.cookies("uid") then
+response.write("<br>上传此文件的用户是："&rs(3))
+end if
+response.write("<br><a href='./downloader.asp'>返回下载其他文件</a>")
+end if
 end if
 %>
